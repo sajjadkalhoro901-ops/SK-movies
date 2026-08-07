@@ -1,13 +1,21 @@
-// SK Movies JavaScript
+const search = document.getElementById("search");
 
-document.addEventListener("DOMContentLoaded", function () {
-    console.log("SK Movies Website Loaded!");
+search.addEventListener("keyup", function () {
 
-    const buttons = document.querySelectorAll("button");
+    let value = search.value.toLowerCase();
 
-    buttons.forEach(button => {
-        button.addEventListener("click", function () {
-            alert("Trailer feature coming soon!");
-        });
+    let cards = document.querySelectorAll(".card");
+
+    cards.forEach(card=>{
+
+        let title = card.querySelector("h3").textContent.toLowerCase();
+
+        if(title.includes(value)){
+            card.style.display="block";
+        }else{
+            card.style.display="none";
+        }
+
     });
+
 });

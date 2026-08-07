@@ -129,3 +129,14 @@ button:hover{
     background:#ff0000;
     transform:scale(1.05);
 }
+.logo{
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.logo img{
+    width:55px;
+    height:55px;
+    border-radius:10px;
+}

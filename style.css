@@ -1,0 +1,90 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial,sans-serif;
+}
+
+body{
+    background:#111;
+    color:#fff;
+}
+
+header{
+    background:#000;
+    padding:20px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+header h1{
+    color:red;
+}
+
+nav a{
+    color:white;
+    text-decoration:none;
+    margin-left:20px;
+}
+
+.hero{
+    height:350px;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+    background:linear-gradient(rgba(0,0,0,.6),rgba(0,0,0,.6)),
+    url("https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=1200") center/cover;
+}
+
+.hero h2{
+    font-size:45px;
+}
+
+.hero p{
+    margin-top:10px;
+    font-size:20px;
+}
+
+.movies{
+    display:flex;
+    justify-content:center;
+    gap:20px;
+    padding:40px;
+    flex-wrap:wrap;
+}
+
+.card{
+    width:250px;
+    background:#222;
+    border-radius:10px;
+    overflow:hidden;
+    transition:.3s;
+}
+
+.card:hover{
+    transform:scale(1.05);
+}
+
+.card img{
+    width:100%;
+}
+
+.card h3{
+    padding:15px;
+}
+
+button{
+    width:100%;
+    padding:12px;
+    background:red;
+    color:white;
+    border:none;
+    cursor:pointer;
+}
+
+button:hover{
+    background:darkred;
+}

@@ -88,3 +88,44 @@ button{
 button:hover{
     background:darkred;
 }
+.search-box{
+    text-align:center;
+    margin:20px;
+}
+
+.search-box input{
+    width:80%;
+    max-width:500px;
+    padding:12px;
+    border:none;
+    border-radius:30px;
+    font-size:16px;
+    outline:none;
+}
+
+.title{
+    text-align:center;
+    margin-top:20px;
+    color:#ff3d3d;
+    font-size:32px;
+}
+
+.card{
+    box-shadow:0 0 20px rgba(255,0,0,.3);
+}
+
+.card img{
+    height:360px;
+    object-fit:cover;
+}
+
+button{
+    font-size:16px;
+    font-weight:bold;
+    transition:.3s;
+}
+
+button:hover{
+    background:#ff0000;
+    transform:scale(1.05);
+}

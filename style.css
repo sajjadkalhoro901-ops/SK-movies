@@ -38,10 +38,17 @@ header h1 img{
     border:2px solid red;
 }
 
-nav a{
+nav anav a{
     color:white;
     text-decoration:none;
-    margin-left:20px;
+    margin-left:25px;
+    font-size:18px;
+    font-weight:bold;
+    transition:0.3s;
+}
+
+nav a:hover{
+    color:red;
 }
 
 .hero{

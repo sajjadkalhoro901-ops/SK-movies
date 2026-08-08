@@ -135,3 +135,14 @@ button{
 button:hover{
     background:#b30000;
 }
+.rating{
+    padding:0 15px 10px;
+    color:#ffd700;
+    font-size:16px;
+    font-weight:bold;
+}
+
+.card:hover{
+    transform:translateY(-8px) scale(1.03);
+    box-shadow:0 10px 30px rgba(255,0,0,.5);
+}

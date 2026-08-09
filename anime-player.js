@@ -11,49 +11,18 @@
   };
   const posterMap={
     'Naruto':'https://image.tmdb.org/t/p/w500/mLoI2Zto2JYUvSB8PpqvZIV7vWj.jpg',
-    'Naruto: Shippuden':'https://image.tmdb.org/t/p/w500/f8cG2J3YQ1q0x4V8Y4nYq3lqJ6m.jpg',
+    'Naruto: Shippuden':'https://image.tmdb.org/t/p/w500/qOxedwaJzdms2alAmIEHEnDeDzg.jpg',
     'Demon Slayer: Kimetsu no Yaiba':'https://image.tmdb.org/t/p/w500/xUfRZu2mi8jH6SzQEJGP6tjBuYj.jpg'
   };
   const q=s=>encodeURIComponent(s);
-  function officialSearch(title,n){
-    const c=CONFIG[title];
-    const query=(c?.search||('site:youtube.com/@Crunchyroll '+title+' full episode'))+' '+n;
-    return 'https://www.google.com/search?q='+q(query);
-  }
-  function ensureStyles(){
-    if(document.getElementById('anime-player-style'))return;
-    const s=document.createElement('style');s.id='anime-player-style';s.textContent=`
-      .anime-poster{width:100%;aspect-ratio:2/3;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at 50% 35%,#5a1b75,#140b1b 55%,#070707);color:#fff;font-size:52px;overflow:hidden}
-      .anime-poster img{width:100%;height:100%;object-fit:cover;display:block}
-      .episode-modal{display:none;position:fixed;inset:0;z-index:5000;background:rgba(0,0,0,.84);backdrop-filter:blur(7px);padding:18px;align-items:center;justify-content:center}
-      .episode-modal.show{display:flex}.episode-box{width:min(760px,100%);max-height:90vh;overflow:auto;background:#111;border:1px solid #333;border-radius:18px;padding:18px;box-shadow:0 30px 90px #000;position:relative}
-      .episode-box h2{font-size:22px;margin:0 45px 4px 0}.episode-box p{color:#aaa;font-size:13px;margin:0 0 14px}.episode-close{position:absolute;right:12px;top:10px;border:0;background:#252525;color:#fff;border-radius:50%;width:38px;height:38px;font-size:24px;cursor:pointer}
-      .episode-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}.episode-btn{border:1px solid #333;background:#1b1b1b;color:#fff;border-radius:9px;padding:10px 4px;font-weight:800;cursor:pointer}.episode-btn:hover{border-color:#e50914;background:#262626}.episode-note{margin-top:14px!important;color:#777!important}
-      .episode-player{margin:0 0 14px;background:#000;border-radius:12px;overflow:hidden;display:none}.episode-player iframe{width:100%;aspect-ratio:16/9;border:0;display:block}
-      @media(max-width:520px){.episode-grid{grid-template-columns:repeat(4,minmax(0,1fr))}.episode-box{padding:14px}.episode-btn{padding:9px 2px;font-size:12px}}
-    `;document.head.appendChild(s);
-  }
-  function createModal(){
-    if(document.getElementById('episode-modal'))return document.getElementById('episode-modal');
-    const m=document.createElement('div');m.id='episode-modal';m.className='episode-modal';m.innerHTML='<div class="episode-box"><button class="episode-close" type="button" aria-label="Close">×</button><h2 id="episode-title">Episodes</h2><p id="episode-subtitle"></p><div id="episode-player" class="episode-player"></div><div id="episode-grid" class="episode-grid"></div><p class="episode-note">Free buttons use official/legal source searches. Availability can vary by country; SK Movies does not host or bypass paid/copyrighted streams.</p></div>';
-    document.body.appendChild(m);m.addEventListener('click',e=>{if(e.target===m||e.target.closest('.episode-close'))closeModal()});document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});return m;
-  }
-  function closeModal(){const m=document.getElementById('episode-modal');if(!m)return;m.classList.remove('show');const p=document.getElementById('episode-player');if(p)p.innerHTML=''}
-  function openModal(title){
-    const c=CONFIG[title];if(!c)return window.open('https://www.google.com/search?q='+q(title+' official free episodes'),'_blank','noopener');
-    ensureStyles();const m=createModal();document.getElementById('episode-title').textContent=title+' — Episodes';document.getElementById('episode-subtitle').textContent=c.count?('Episodes 1–'+c.count+' • Official/legal source: '+c.channel):('Episode list will open from the official source for '+title+'.');
-    const grid=document.getElementById('episode-grid');grid.innerHTML='';const player=document.getElementById('episode-player');player.style.display='none';
-    const total=c.count||1;for(let i=1;i<=total;i++){const b=document.createElement('button');b.type='button';b.className='episode-btn';b.textContent='Episode '+i;b.onclick=()=>{player.style.display='none';player.innerHTML='';window.open(officialSearch(title,i),'_blank','noopener')};grid.appendChild(b)}
-    m.classList.add('show');
-  }
-  function decorate(){
-    document.querySelectorAll('.card').forEach(card=>{
-      const title=card.querySelector('h3')?.textContent?.trim();if(!CONFIG[title])return;if(card.dataset.animeReady)return;card.dataset.animeReady='1';
-      const poster=posterMap[title];const old=card.querySelector('.anime-poster');if(old&&poster){old.innerHTML='<img loading="lazy" src="'+poster+'" alt="'+title.replace(/"/g,'')+' poster">'}
-      const row=card.querySelector('.btn-row');if(!row)return;
-      const watch=row.querySelector('.watch-btn');if(watch){watch.removeAttribute('href');watch.removeAttribute('target');watch.textContent='▶ Episodes';watch.href='#';watch.addEventListener('click',e=>{e.preventDefault();openModal(title)})}
-      const free=document.createElement('button');free.type='button';free.className='free-watch-btn';free.textContent='🆓 Free';free.addEventListener('click',()=>openModal(title));row.appendChild(free)
-    });
-  }
+  function officialSearch(title,n){const c=CONFIG[title];const query=(c?.search||('site:youtube.com/@Crunchyroll '+title+' full episode'))+' '+n;return 'https://www.google.com/search?q='+q(query)}
+  function ensureStyles(){if(document.getElementById('anime-player-style'))return;const s=document.createElement('style');s.id='anime-player-style';s.textContent=`
+    .anime-poster{width:100%;aspect-ratio:2/3;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at 50% 35%,#5a1b75,#140b1b 55%,#070707);color:#fff;font-size:52px;overflow:hidden}.anime-poster img{width:100%;height:100%;object-fit:cover;display:block}
+    .episode-modal{display:none;position:fixed;inset:0;z-index:5000;background:rgba(0,0,0,.84);backdrop-filter:blur(7px);padding:18px;align-items:center;justify-content:center}.episode-modal.show{display:flex}.episode-box{width:min(760px,100%);max-height:90vh;overflow:auto;background:#111;border:1px solid #333;border-radius:18px;padding:18px;box-shadow:0 30px 90px #000;position:relative}.episode-box h2{font-size:22px;margin:0 45px 4px 0}.episode-box p{color:#aaa;font-size:13px;margin:0 0 14px}.episode-close{position:absolute;right:12px;top:10px;border:0;background:#252525;color:#fff;border-radius:50%;width:38px;height:38px;font-size:24px;cursor:pointer}.episode-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}.episode-btn{border:1px solid #333;background:#1b1b1b;color:#fff;border-radius:9px;padding:10px 4px;font-weight:800;cursor:pointer}.episode-btn:hover{border-color:#e50914;background:#262626}.episode-note{margin-top:14px!important;color:#777!important}@media(max-width:520px){.episode-grid{grid-template-columns:repeat(4,minmax(0,1fr))}.episode-box{padding:14px}.episode-btn{padding:9px 2px;font-size:12px}}
+  `;document.head.appendChild(s)}
+  function createModal(){if(document.getElementById('episode-modal'))return document.getElementById('episode-modal');const m=document.createElement('div');m.id='episode-modal';m.className='episode-modal';m.innerHTML='<div class="episode-box"><button class="episode-close" type="button" aria-label="Close">×</button><h2 id="episode-title">Episodes</h2><p id="episode-subtitle"></p><div id="episode-grid" class="episode-grid"></div><p class="episode-note">Free buttons use official/legal source searches. Availability can vary by country; SK Movies does not host or bypass paid/copyrighted streams.</p></div>';document.body.appendChild(m);m.addEventListener('click',e=>{if(e.target===m||e.target.closest('.episode-close'))closeModal()});document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});return m}
+  function closeModal(){document.getElementById('episode-modal')?.classList.remove('show')}
+  function openModal(title){const c=CONFIG[title];if(!c)return window.open('https://www.google.com/search?q='+q(title+' official free episodes'),'_blank','noopener');ensureStyles();const m=createModal();document.getElementById('episode-title').textContent=title+' — Episodes';document.getElementById('episode-subtitle').textContent=c.count?('Episodes 1–'+c.count+' • Official/legal source: '+c.channel):('Use the official source search for '+title+'.');const grid=document.getElementById('episode-grid');grid.innerHTML='';const total=c.count||1;for(let i=1;i<=total;i++){const b=document.createElement('button');b.type='button';b.className='episode-btn';b.textContent='Episode '+i;b.onclick=()=>window.open(officialSearch(title,i),'_blank','noopener');grid.appendChild(b)}m.classList.add('show')}
+  function decorate(){document.querySelectorAll('.card').forEach(card=>{const title=card.querySelector('h3')?.textContent?.trim();if(!CONFIG[title]||card.dataset.animeReady)return;card.dataset.animeReady='1';const old=card.querySelector('.anime-poster');const poster=posterMap[title];if(old&&poster)old.innerHTML='<img loading="lazy" src="'+poster+'" alt="'+title.replace(/"/g,'')+' poster">';const row=card.querySelector('.btn-row');if(!row)return;const watch=row.querySelector('.watch-btn');if(watch){watch.removeAttribute('href');watch.removeAttribute('target');watch.textContent='▶ Episodes';watch.href='#';watch.addEventListener('click',e=>{e.preventDefault();openModal(title)})}const free=document.createElement('button');free.type='button';free.className='free-watch-btn';free.textContent='🆓 Free';free.addEventListener('click',()=>openModal(title));row.appendChild(free)})}
   ensureStyles();setTimeout(decorate,300);setTimeout(decorate,1500);setInterval(decorate,3000);
 })();

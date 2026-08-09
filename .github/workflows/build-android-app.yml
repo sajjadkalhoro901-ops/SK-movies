@@ -11,6 +11,8 @@ on:
       - 'app/settings.gradle'
       - 'index.html'
       - 'script.js'
+      - 'site-core.js'
+      - 'anime-player.js'
       - 'style.css'
       - 'images/**'
       - '.github/workflows/build-android-app.yml'
@@ -29,7 +31,7 @@ jobs:
         shell: bash
         run: |
           mkdir -p app/src/main/assets
-          cp index.html script.js style.css app/src/main/assets/
+          cp index.html script.js site-core.js anime-player.js style.css app/src/main/assets/
           if [ -d images ]; then cp -R images app/src/main/assets/; fi
 
       - name: Set up JDK 17

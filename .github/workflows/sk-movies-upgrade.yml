@@ -1,0 +1,86 @@
+name: SK Movies Upgrade
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  upgrade:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Add safe website features
+        shell: python
+        run: |
+          from pathlib import Path
+          p = Path('script.js')
+          text = p.read_text(encoding='utf-8')
+          marker = '/* SK_MOVIES_UPGRADE_V1 */'
+          if marker not in text:
+              extra = r'''\n/* SK_MOVIES_UPGRADE_V1 */
+(function(){
+  const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>Array.from(r.querySelectorAll(s));
+  const grid=$('#movies');
+  if(!grid) return;
+  const cards=$$('.card',grid);
+  const keyFav='skmovies_favorites_v1', keyRecent='skmovies_recent_v1', keyTheme='skmovies_theme_v1';
+  const get=(k,d=[])=>{try{return JSON.parse(localStorage.getItem(k)||JSON.stringify(d))}catch{return d}};
+  const put=(k,v)=>localStorage.setItem(k,JSON.stringify(v));
+  const titleOf=c=>($('h3',c)?.textContent||'SK Movies').trim();
+  const posterOf=c=>$('img',c)?.src||'';
+
+  // Extra category and language filters.
+  const filters=$('.filters');
+  if(filters){
+    const wanted=[['anime','🍥 Anime'],['hindi','🇮🇳 Hindi'],['english','🇬🇧 English'],['japanese','🇯🇵 Japanese'],['chinese','🇨🇳 Chinese']];
+    wanted.forEach(([value,label])=>{if($(`[data-filter="${value}"]`,filters))return;const b=document.createElement('button');b.className='filter';b.dataset.filter=value;b.textContent=label;filters.appendChild(b);b.addEventListener('click',()=>{ $$('.filter',filters).forEach(x=>x.classList.remove('active'));b.classList.add('active'); applyExtraFilter(value); });});
+  }
+  function applyExtraFilter(value){
+    const q=($('#search')?.value||'').toLowerCase().trim(); let n=0;
+    cards.forEach(c=>{
+      const t=titleOf(c).toLowerCase(), m=($$('.meta',c).map(x=>x.textContent).join(' ')+' '+(c.dataset.category||'')).toLowerCase();
+      const lang=value==='all'||(value==='anime'?(c.dataset.category||'').includes('anime'):value==='hindi'?m.includes('hindi'):value==='english'?m.includes('english'):value==='japanese'?m.includes('japanese'):value==='chinese'?m.includes('chinese'):(c.dataset.category||'').split(' ').includes(value));
+      const ok=lang&&(!q||t.includes(q)||m.includes(q)); c.hidden=!ok; if(ok)n++;
+    });
+    const count=$('#movie-count'); if(count)count.textContent=n+' titles';
+    const no=$('#no-results'); if(no)no.hidden=n!==0;
+  }
+
+  // Favorites: stored only in this browser.
+  function favs(){return get(keyFav,[])}
+  function renderFavoriteState(){const f=favs();cards.forEach(c=>{const b=$('.favorite-btn',c);if(b){const on=f.includes(titleOf(c));b.textContent=on?'♥ Saved':'♡ Favorite';b.setAttribute('aria-pressed',String(on));}})}
+  cards.forEach(c=>{
+    const row=$('.btn-row',c); if(!row)return;
+    if(!$('.favorite-btn',c)){const b=document.createElement('button');b.type='button';b.className='favorite-btn';b.textContent='♡ Favorite';row.appendChild(b);b.addEventListener('click',e=>{e.stopPropagation();const t=titleOf(c),f=favs(),i=f.indexOf(t);i>=0?f.splice(i,1):f.unshift(t);put(keyFav,f.slice(0,50));renderFavoriteState();renderFavorites();});}
+    c.addEventListener('click',e=>{if(e.target.closest('a,button'))return;const t=titleOf(c),r=get(keyRecent,[]).filter(x=>x.title!==t);r.unshift({title:t,poster:posterOf(c)});put(keyRecent,r.slice(0,12));renderRecent();});
+  });
+  function section(id,heading){let s=document.getElementById(id);if(s)return s;s=document.createElement('section');s.id=id;s.className='extra-section';s.innerHTML='<div class="section-heading"><div><span class="eyebrow">YOUR LIST</span><h2>'+heading+'</h2></div></div><div class="extra-grid"></div>';const footer=$('footer');footer?.parentNode.insertBefore(s,footer);return s}
+  function renderFavorites(){const s=section('favorites-section','❤️ Favorites');const box=$('.extra-grid',s);box.innerHTML='';const f=favs();if(!f.length){box.innerHTML='<p class="extra-empty">No favorites yet. Tap ♡ Favorite on any title.</p>';return}f.slice(0,12).forEach(t=>{const c=cards.find(x=>titleOf(x)===t);if(c){const clone=c.cloneNode(true);clone.querySelectorAll('button,a').forEach(x=>x.remove());box.appendChild(clone)}})}
+  function renderRecent(){const s=section('recent-section','🕐 Recently Viewed');const box=$('.extra-grid',s);box.innerHTML='';const r=get(keyRecent,[]);if(!r.length){box.innerHTML='<p class="extra-empty">Open a movie card to build your recent list.</p>';return}r.forEach(x=>{const el=document.createElement('div');el.className='recent-item';el.innerHTML='<strong>'+x.title.replace(/[&<>"']/g,'')+'</strong>';box.appendChild(el)})}
+  renderFavoriteState();renderFavorites();renderRecent();
+
+  // Theme toggle.
+  const header=$('header'); if(header&&!$('#theme-toggle')){const b=document.createElement('button');b.id='theme-toggle';b.className='theme-toggle';b.type='button';b.textContent='☀️';b.title='Toggle light/dark mode';header.appendChild(b);const theme=localStorage.getItem(keyTheme);if(theme==='light')document.documentElement.classList.add('light-theme');b.addEventListener('click',()=>{document.documentElement.classList.toggle('light-theme');localStorage.setItem(keyTheme,document.documentElement.classList.contains('light-theme')?'light':'dark');});}
+
+  // Contact section with the user's supplied contact links.
+  if(!document.getElementById('contact-us')){const s=document.createElement('section');s.id='contact-us';s.className='contact-section';s.innerHTML='<div class="section-heading"><div><span class="eyebrow">GET IN TOUCH</span><h2>📞 Contact Us</h2></div></div><div class="contact-grid"><a class="contact-card" href="https://wa.me/923107748479" target="_blank" rel="noopener noreferrer"><strong>🟢 WhatsApp</strong><span>Message SK Movies on WhatsApp</span></a><a class="contact-card" href="https://www.facebook.com/Z44LIM.DOCTOR" target="_blank" rel="noopener noreferrer"><strong>🔵 Facebook</strong><span>Visit our Facebook page</span></a></div>';const footer=$('footer');footer?.parentNode.insertBefore(s,footer);}
+
+  // Back-to-top button.
+  if(!$('#back-top')){const b=document.createElement('button');b.id='back-top';b.type='button';b.textContent='↑';b.title='Back to top';document.body.appendChild(b);b.addEventListener('click',()=>window.scrollTo({top:0,behavior:'smooth'}));window.addEventListener('scroll',()=>b.classList.toggle('show',window.scrollY>500),{passive:true});}
+})();
+'''
+              p.write_text(text + extra, encoding='utf-8')
+
+      - name: Commit upgrade
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add script.js
+          git diff --cached --quiet || git commit -m "Add favorites, recent views, themes, filters and contact"
+          git push

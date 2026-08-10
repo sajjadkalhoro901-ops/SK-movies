@@ -1,1 +1,18 @@
-(function(){const VIDEO='https://archive.org/download/BigBuckBunny_328/BigBuckBunny_512kb.mp4';function init(){const grid=document.querySelector('.movies');if(!grid||document.getElementById('sk-test-movie'))return;const c=document.createElement('article');c.id='sk-test-movie';c.className='card';c.innerHTML='<img loading="lazy" src="https://peach.blender.org/wp-content/uploads/title_anouncement.jpg?x11217" alt="Big Buck Bunny"><div class="card-body"><h3>Big Buck Bunny — Test Movie</h3><p class="meta">Legal test video • Creative Commons</p><div class="btn-row"><button class="watch-btn" type="button" style="grid-column:1/-1">▶ Watch Direct</button></div></div>';c.querySelector('button').onclick=()=>{let m=document.getElementById('sk-test-player');if(!m){m=document.createElement('div');m.id='sk-test-player';m.style='position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.9);display:flex;align-items:center;justify-content:center;padding:15px';m.innerHTML='<div style="width:min(850px,100%);background:#111;padding:15px;border-radius:15px"><button id="sk-close" style="float:right;background:#333;color:#fff;border:0;border-radius:50%;width:35px;height:35px;font-size:22px">×</button><h2 style="color:#fff;margin:5px 0 15px">Big Buck Bunny — Test Movie</h2><video controls autoplay playsinline style="width:100%;max-height:70vh;background:#000;border-radius:10px"><source src="'+VIDEO+'" type="video/mp4"></video></div>';document.body.appendChild(m);m.querySelector('#sk-close').onclick=()=>m.remove()}};grid.prepend(c)};setTimeout(init,500);setTimeout(init,2000)})();
+(function(){
+  const VIDEO='https://archive.org/download/BigBuckBunny_328/BigBuckBunny_512kb.mp4';
+  function init(){
+    const grid=document.querySelector('.movies');
+    if(!grid||document.getElementById('sk-test-movie'))return;
+    const c=document.createElement('article');
+    c.id='sk-test-movie';
+    c.className='card';
+    c.innerHTML='<img loading="lazy" alt="Big Buck Bunny"><div class="card-body"><h3>Big Buck Bunny — Test Movie</h3><p class="meta">Legal test video • Creative Commons</p><div class="btn-row"><button class="watch-btn" type="button" style="grid-column:1/-1">▶ Watch Direct</button></div></div>';
+    c.querySelector('button').onclick=()=>{
+      const w=window.open(VIDEO,'_blank','noopener,noreferrer');
+      if(!w) location.href=VIDEO;
+    };
+    grid.prepend(c);
+  }
+  setTimeout(init,500);
+  setTimeout(init,2000);
+})();

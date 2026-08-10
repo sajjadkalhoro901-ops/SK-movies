@@ -1,16 +1,18 @@
-/* SK Movies: legal/free open movies section. Direct media URLs avoid redirect failures. */
+/* SK Movies: legal/free open movies section. Uses verified Blender Video MP4 sources. */
 (function(){
   const legalMovies=[
-    ['Big Buck Bunny','https://upload.wikimedia.org/wikipedia/commons/e/e7/Big_buck_bunny_720p_5mb.webm','CC BY-SA 4.0','🐰'],
-    ['Elephants Dream','https://upload.wikimedia.org/wikipedia/commons/5/51/Elephants%20Dream%28HQ%29.webm','CC BY-SA 2.5','🐘'],
-    ['Sintel','https://upload.wikimedia.org/wikipedia/commons/b/b6/Sintel%20webm%20extract.webm','CC BY 3.0','🐉'],
-    ['Tears of Steel','https://upload.wikimedia.org/wikipedia/commons/e/ef/Tears%20of%20Steel%201080p.webm','CC BY 3.0','🤖'],
-    ['Sita Sings the Blues','https://upload.wikimedia.org/wikipedia/commons/9/93/Sita%20Sings%20the%20Blues.webm','CC0 / Public Domain Dedication','🎨'],
-    ['Night of the Living Dead','https://upload.wikimedia.org/wikipedia/commons/c/c1/Night%20of%20the%20Living%20Dead%20%281968%29.webm','Public domain (US)','🧟'],
-    ['Spring','https://upload.wikimedia.org/wikipedia/commons/6/62/Spring%20-%20Blender%20Open%20Movie.webm','CC BY 4.0','🌲'],
-    ['Cosmos Laundromat','https://upload.wikimedia.org/wikipedia/commons/7/70/Cosmos%20Laundromat%20-%20First%20Cycle%20-%20Official%20Blender%20Foundation%20release.webm','CC BY-SA 3.0','🐑'],
-    ['Caminandes: Gran Dillama','https://upload.wikimedia.org/wikipedia/commons/2/29/Caminandes%2C%20Gran%20Dillama%20-%20Blender%20Foundation.webm','CC BY-SA 3.0','🦙'],
-    ['Caminandes: Llamigos','https://upload.wikimedia.org/wikipedia/commons/4/47/Caminandes%203%20-%20Llamigos%20-%20Blender%20Animated%20Short.webm','CC BY 3.0','🦙']
+    ['Big Buck Bunny','https://video.blender.org/static/webseed/bf1f3fb5-b119-4f9f-9930-8e20e892b898-720.mp4','Blender Open Movie','🐰'],
+    ['Elephants Dream','https://video.blender.org/static/webseed/cccc3e60-0291-4ecc-aa56-39b2e2c7d0d5-720.mp4','Blender Open Movie','🐘'],
+    ['Sintel','https://video.blender.org/static/webseed/0eb052d0-fd51-43e6-aa33-ecdbf77a5d40-720.mp4','Blender Open Movie','🐉'],
+    ['Tears of Steel','https://video.blender.org/static/webseed/8533ea43-4271-4a57-9694-e9d0b35e1aa1-720.mp4','Blender Open Movie','🤖'],
+    ['Cosmos Laundromat','https://video.blender.org/static/webseed/f507dfdc-e73e-45a4-9778-d758cbe1ce96-720.mp4','Blender Open Movie','🐑'],
+    ['Spring','https://video.blender.org/static/webseed/3d95fb3d-c866-42c8-9db1-fe82f48ccb95-720.mp4','Blender Open Movie','🌲'],
+    ['Caminandes: Gran Dillama','https://video.blender.org/static/webseed/fb70d459-48d2-4db5-adba-813c84f9200a-720.mp4','Blender Open Movie','🦙'],
+    ['Caminandes: Llamigos','https://video.blender.org/static/webseed/23f3ef79-15dc-44c5-aa45-cf92e78a4509-720.mp4','Blender Open Movie','🦙'],
+    ['Coffee Run','https://video.blender.org/static/webseed/ff8fe61b-026f-4f07-b66b-2a790d6f6ab1-720.mp4','Blender Open Movie','☕'],
+    ['Glass Half','https://video.blender.org/static/webseed/64222c8a-c4c7-4b3b-9850-7fb2078edcf6-720.mp4','Blender Open Movie','🥛'],
+    ['Agent 327: Operation Barbershop','https://video.blender.org/static/webseed/264ff760-803e-430e-8d81-15648e904183-720.mp4','Blender Open Movie','🕵️'],
+    ['Sprite Fright','https://video.blender.org/download/videos/a69d68a5-a0e0-4a80-9d66-49f093c97aaf-720.mp4','Blender Open Movie','👻']
   ];
   const esc=s=>String(s).replace(/[&<>\"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#39;'}[m]));
 
@@ -38,7 +40,7 @@
     let p=document.getElementById('sk-legal-player');
     if(p)return p;
     p=document.createElement('div');p.id='sk-legal-player';p.className='sk-legal-player';
-    p.innerHTML='<div class="sk-legal-box"><button class="sk-legal-close" type="button" aria-label="Close">×</button><h2 id="sk-legal-title">Now Playing</h2><video id="sk-legal-video" controls playsinline preload="metadata"></video><p id="sk-legal-error" class="sk-legal-error"></p><p class="sk-legal-credit">Open/Creative Commons video • Source: Wikimedia Commons • License shown on the card.</p></div>';
+    p.innerHTML='<div class="sk-legal-box"><button class="sk-legal-close" type="button" aria-label="Close">×</button><h2 id="sk-legal-title">Now Playing</h2><video id="sk-legal-video" controls playsinline preload="metadata" crossorigin="anonymous"></video><p id="sk-legal-error" class="sk-legal-error"></p><p class="sk-legal-credit">Open Movie • Source: Blender Video. Licensing/attribution belongs to the original film.</p></div>';
     document.body.appendChild(p);
     const close=()=>{const v=document.getElementById('sk-legal-video');v.pause();v.removeAttribute('src');v.load();p.classList.remove('show')};
     p.querySelector('.sk-legal-close').onclick=close;
@@ -50,11 +52,16 @@
     const p=player(),v=document.getElementById('sk-legal-video'),err=document.getElementById('sk-legal-error');
     document.getElementById('sk-legal-title').textContent='▶ '+movie[0];
     err.style.display='none';
+    err.textContent='';
     p.classList.add('show');
-    v.onerror=()=>{err.textContent='Video source could not be loaded right now.';err.style.display='block'};
+    v.pause();
+    v.removeAttribute('src');
+    v.load();
+    v.onerror=()=>{err.textContent='Video source is unavailable right now. Please try again.';err.style.display='block'};
     v.src=movie[1];
     v.load();
-    v.play().catch(()=>{});
+    const start=()=>{v.play().catch(()=>{err.textContent='Tap the ▶ play button once to start the video.';err.style.display='block'})};
+    if(v.readyState>=2)start();else v.oncanplay=start;
   }
 
   function init(){
@@ -63,11 +70,11 @@
     if(!document.getElementById('sk-legal-section')){
       const section=document.createElement('section');
       section.id='sk-legal-section';section.className='sk-legal-section';
-      section.innerHTML='<div class="sk-legal-head"><div><span class="eyebrow">FREE • LEGAL • OPEN MOVIES</span><h2>🎬 Watch Free Movies</h2></div><p>10 titles • play directly here</p></div><div class="sk-legal-grid"></div>';
+      section.innerHTML='<div class="sk-legal-head"><div><span class="eyebrow">FREE • LEGAL • OPEN MOVIES</span><h2>🎬 Watch Free Movies</h2></div><p>12 titles • play directly here</p></div><div class="sk-legal-grid"></div>';
       const cards=section.querySelector('.sk-legal-grid');
       legalMovies.forEach(movie=>{
         const card=document.createElement('article');card.className='sk-legal-card';
-        card.innerHTML='<div class="sk-legal-art"><div>'+movie[3]+'</div><span>Open Movie</span></div><div class="sk-legal-body"><h3>'+esc(movie[0])+'</h3><p class="sk-legal-meta">Open/Creative Commons • '+esc(movie[2])+'</p><button class="sk-legal-watch" type="button">▶ Watch Here</button></div>';
+        card.innerHTML='<div class="sk-legal-art"><div>'+movie[3]+'</div><span>OPEN MOVIE</span></div><div class="sk-legal-body"><h3>'+esc(movie[0])+'</h3><p class="sk-legal-meta">Open Movie • Blender</p><button class="sk-legal-watch" type="button">▶ Watch Here</button></div>';
         card.querySelector('button').onclick=()=>play(movie);
         cards.appendChild(card);
       });

@@ -6,10 +6,44 @@
     {title:'Elephants Dream',emoji:'🐘',source:'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4',license:'Blender Foundation • Creative Commons'},
     {title:'Tears of Steel',emoji:'🎬',source:'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4',license:'Blender Foundation • Creative Commons'}
   ];
-  const onCartoonsPage=/\/cartoons\.html(?:$|[?#])/.test(location.pathname+location.search+location.hash);
-  function style(){if(document.getElementById('sk-cartoon-style'))return;const s=document.createElement('style');s.id='sk-cartoon-style';s.textContent='.sk-cartoon-section{margin:42px 0}.sk-cartoon-head{display:flex;justify-content:space-between;align-items:end;margin-bottom:22px}.sk-cartoon-head h2{margin:5px 0 7px}.sk-cartoon-sub{opacity:.7;margin:0}.sk-cartoon-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}.sk-cartoon-card{background:#121212;border:1px solid #292929;border-radius:18px;overflow:hidden;box-shadow:0 8px 30px #0006}.sk-cartoon-art{height:210px;display:grid;place-items:center;font-size:86px;background:radial-gradient(circle,#3b1010,#090909)}.sk-cartoon-body{padding:18px}.sk-cartoon-body h3{margin:0 0 7px;font-size:21px}.sk-cartoon-body p{font-size:13px;opacity:.7;margin:0 0 14px}.sk-cartoon-watch{width:100%;padding:12px;border:0;border-radius:10px;background:#e50914;color:#fff;font-weight:800;font-size:15px}.sk-cartoon-player{position:fixed;inset:0;background:#000d;display:none;align-items:center;justify-content:center;padding:14px;z-index:99998}.sk-cartoon-player.show{display:flex}.sk-cartoon-box{width:min(960px,100%);background:#111;border:1px solid #333;border-radius:18px;padding:16px;position:relative}.sk-cartoon-box h2{color:#fff;margin:0 55px 12px 0}.sk-cartoon-box video{width:100%;aspect-ratio:16/9;background:#000;border-radius:10px}.sk-cartoon-close{position:absolute;right:14px;top:10px;width:44px;height:44px;border:0;border-radius:50%;background:#292929;color:#fff;font-size:28px}@media(max-width:700px){.sk-cartoon-grid{grid-template-columns:1fr}.sk-cartoon-head{display:block}.sk-cartoon-art{height:180px}}';document.head.appendChild(s)}
+  const page=(location.pathname.split('/').pop()||'index.html').toLowerCase();
+  const onCartoonsPage=page==='cartoons.html';
+
+  function style(){
+    if(document.getElementById('sk-cartoon-style'))return;
+    const s=document.createElement('style');s.id='sk-cartoon-style';
+    s.textContent='.sk-cartoon-section{margin:0}.sk-cartoon-head{display:flex;justify-content:space-between;align-items:end;margin-bottom:22px}.sk-cartoon-head h2{margin:5px 0 7px}.sk-cartoon-sub{opacity:.7;margin:0}.sk-cartoon-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}.sk-cartoon-card{background:#121212;border:1px solid #292929;border-radius:18px;overflow:hidden;box-shadow:0 8px 30px #0006}.sk-cartoon-art{height:210px;display:grid;place-items:center;font-size:86px;background:radial-gradient(circle,#3b1010,#090909)}.sk-cartoon-body{padding:18px}.sk-cartoon-body h3{margin:0 0 7px;font-size:21px}.sk-cartoon-body p{font-size:13px;opacity:.7;margin:0 0 14px}.sk-cartoon-watch{width:100%;padding:12px;border:0;border-radius:10px;background:#e50914;color:#fff;font-weight:800;font-size:15px;cursor:pointer}.sk-cartoon-player{position:fixed;inset:0;background:#000d;display:none;align-items:center;justify-content:center;padding:14px;z-index:99998}.sk-cartoon-player.show{display:flex}.sk-cartoon-box{width:min(960px,100%);background:#111;border:1px solid #333;border-radius:18px;padding:16px;position:relative}.sk-cartoon-box h2{color:#fff;margin:0 55px 12px 0}.sk-cartoon-box video{width:100%;aspect-ratio:16/9;background:#000;border-radius:10px}.sk-cartoon-close{position:absolute;right:14px;top:10px;width:44px;height:44px;border:0;border-radius:50%;background:#292929;color:#fff;font-size:28px}@media(max-width:700px){.sk-cartoon-grid{grid-template-columns:1fr}.sk-cartoon-head{display:block}.sk-cartoon-art{height:180px}}';
+    document.head.appendChild(s)
+  }
+
   function nav(){const n=document.querySelector('nav');if(!n||n.querySelector('a[href="cartoons.html"]'))return;const a=document.createElement('a');a.href='cartoons.html';a.textContent='Cartoons';n.appendChild(a)}
-  function player(){let p=document.getElementById('sk-cartoon-player');if(p)return p;p=document.createElement('div');p.id='sk-cartoon-player';p.className='sk-cartoon-player';p.innerHTML='<div class="sk-cartoon-box"><button class="sk-cartoon-close" aria-label="Close">×</button><h2 id="sk-cartoon-title">Now Playing</h2><video id="sk-cartoon-video" controls playsinline preload="metadata"></video></div>';document.body.appendChild(p);p.querySelector('.sk-cartoon-close').onclick=()=>{const v=p.querySelector('video');v.pause();v.removeAttribute('src');v.load();p.classList.remove('show')};return p}
-  function init(){style();nav();if(!onCartoonsPage){const old=document.getElementById('cartoons');if(old)old.style.display='none';document.querySelectorAll('.sk-cartoon-section').forEach(e=>e.style.display='none');return}if(document.getElementById('sk-cartoon-section'))return;const main=document.querySelector('main');if(!main)return;const sec=document.createElement('section');sec.id='sk-cartoon-section';sec.className='sk-cartoon-section';sec.innerHTML='<div class="sk-cartoon-head"><div><span class="eyebrow">FREE • LEGAL • OPEN ANIMATION</span><h2>🎨 Cartoons & Animation</h2><p class="sk-cartoon-sub">Open/authorized films that can play directly on this page.</p></div><span>4 titles</span></div><div class="sk-cartoon-grid"></div>';const grid=sec.querySelector('.sk-cartoon-grid');cartoons.forEach(c=>{const a=document.createElement('article');a.className='sk-cartoon-card';a.innerHTML='<div class="sk-cartoon-art">'+c.emoji+'</div><div class="sk-cartoon-body"><h3>'+c.title+'</h3><p>'+c.license+'</p><button class="sk-cartoon-watch">▶ Watch Now</button></div>';a.querySelector('button').onclick=()=>{const p=player(),v=p.querySelector('video');p.querySelector('#sk-cartoon-title').textContent='▶ '+c.title;v.src=c.source;p.classList.add('show');v.play().catch(()=>{})};grid.appendChild(a)});main.appendChild(sec)}
+
+  function player(){
+    let p=document.getElementById('sk-cartoon-player');if(p)return p;
+    p=document.createElement('div');p.id='sk-cartoon-player';p.className='sk-cartoon-player';
+    p.innerHTML='<div class="sk-cartoon-box"><button class="sk-cartoon-close" aria-label="Close">×</button><h2 id="sk-cartoon-title">Now Playing</h2><video id="sk-cartoon-video" controls playsinline preload="metadata"></video></div>';
+    document.body.appendChild(p);
+    p.querySelector('.sk-cartoon-close').onclick=()=>{const v=p.querySelector('video');v.pause();v.removeAttribute('src');v.load();p.classList.remove('show')};
+    return p
+  }
+
+  function init(){
+    style();
+    nav();
+    // Never render cartoon cards on the homepage.
+    if(!onCartoonsPage)return;
+    if(document.getElementById('sk-cartoon-section'))return;
+    const main=document.querySelector('main');if(!main)return;
+    const sec=document.createElement('section');sec.id='sk-cartoon-section';sec.className='sk-cartoon-section';
+    sec.innerHTML='<div class="sk-cartoon-head"><div><span class="eyebrow">FREE • LEGAL • OPEN ANIMATION</span><h2>🎨 Cartoons & Animation</h2><p class="sk-cartoon-sub">Open/authorized films that can play directly on this page.</p></div><span>'+cartoons.length+' titles</span></div><div class="sk-cartoon-grid"></div>';
+    const grid=sec.querySelector('.sk-cartoon-grid');
+    cartoons.forEach(c=>{
+      const a=document.createElement('article');a.className='sk-cartoon-card';
+      a.innerHTML='<div class="sk-cartoon-art">'+c.emoji+'</div><div class="sk-cartoon-body"><h3>'+c.title+'</h3><p>'+c.license+'</p><button class="sk-cartoon-watch">▶ Watch Now</button></div>';
+      a.querySelector('button').onclick=()=>{const p=player(),v=p.querySelector('video');p.querySelector('#sk-cartoon-title').textContent='▶ '+c.title;v.src=c.source;p.classList.add('show');v.play().catch(()=>{})};
+      grid.appendChild(a)
+    });
+    main.appendChild(sec)
+  }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
 })();

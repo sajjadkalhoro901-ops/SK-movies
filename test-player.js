@@ -1,20 +1,18 @@
-/* SK Movies: legal/free open movies section. Sources are openly licensed/public-domain works. */
+/* SK Movies: legal/free open movies section. Direct media URLs avoid redirect failures. */
 (function(){
-  const BASE='https://commons.wikimedia.org/wiki/Special:Redirect/file/';
   const legalMovies=[
-    ['Big Buck Bunny',['Big_buck_bunny_720p_5mb.webm','Big_Buck_Bunny_alt.webm'],'CC BY-SA 4.0','🐰'],
-    ['Elephants Dream',['Elephants_Dream(HQ).webm'],'CC BY-SA 2.5','🐘'],
-    ['Sintel',['Sintel_movie_-_Blender_Fondation.ogv'],'CC BY 3.0','🐉'],
-    ['Tears of Steel',['Tears_of_Steel_1080p.webm'],'CC BY 3.0','🤖'],
-    ['Sita Sings the Blues',['Sita_Sings_the_Blues.webm'],'Creative Commons free-culture release','🎨'],
-    ['Night of the Living Dead',['Night_of_the_Living_Dead_(1968_film).webm'],'Public domain','🧟'],
-    ['Spring',['Spring_-_Blender_Open_Movie.webm'],'CC BY 4.0','🌲'],
-    ['Cosmos Laundromat',['Cosmos_Laundromat_-_First_Cycle_-_Official_Blender_Foundation_release.webm'],'CC BY 4.0','🐑'],
-    ['Caminandes: Gran Dillama',['Caminandes%2C_Gran_Dillama_-_Blender_Foundation.webm'],'CC BY-SA 3.0','🦙'],
-    ['Caminandes: Llamigos',['Caminandes_3_-_Llamigos_-_Blender_Animated_Short.webm'],'CC BY 3.0','🦙']
+    ['Big Buck Bunny','https://upload.wikimedia.org/wikipedia/commons/e/e7/Big_buck_bunny_720p_5mb.webm','CC BY-SA 4.0','🐰'],
+    ['Elephants Dream','https://upload.wikimedia.org/wikipedia/commons/5/51/Elephants%20Dream%28HQ%29.webm','CC BY-SA 2.5','🐘'],
+    ['Sintel','https://upload.wikimedia.org/wikipedia/commons/b/b6/Sintel%20webm%20extract.webm','CC BY 3.0','🐉'],
+    ['Tears of Steel','https://upload.wikimedia.org/wikipedia/commons/e/ef/Tears%20of%20Steel%201080p.webm','CC BY 3.0','🤖'],
+    ['Sita Sings the Blues','https://upload.wikimedia.org/wikipedia/commons/9/93/Sita%20Sings%20the%20Blues.webm','CC0 / Public Domain Dedication','🎨'],
+    ['Night of the Living Dead','https://upload.wikimedia.org/wikipedia/commons/c/c1/Night%20of%20the%20Living%20Dead%20%281968%29.webm','Public domain (US)','🧟'],
+    ['Spring','https://upload.wikimedia.org/wikipedia/commons/6/62/Spring%20-%20Blender%20Open%20Movie.webm','CC BY 4.0','🌲'],
+    ['Cosmos Laundromat','https://upload.wikimedia.org/wikipedia/commons/7/70/Cosmos%20Laundromat%20-%20First%20Cycle%20-%20Official%20Blender%20Foundation%20release.webm','CC BY-SA 3.0','🐑'],
+    ['Caminandes: Gran Dillama','https://upload.wikimedia.org/wikipedia/commons/2/29/Caminandes%2C%20Gran%20Dillama%20-%20Blender%20Foundation.webm','CC BY-SA 3.0','🦙'],
+    ['Caminandes: Llamigos','https://upload.wikimedia.org/wikipedia/commons/4/47/Caminandes%203%20-%20Llamigos%20-%20Blender%20Animated%20Short.webm','CC BY 3.0','🦙']
   ];
   const esc=s=>String(s).replace(/[&<>\"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#39;'}[m]));
-  const src=file=>file.includes('%')?BASE+file:BASE+encodeURIComponent(file);
 
   function removeBrokenEpisodeUi(){
     const bad=['Episode list unavailable','Episode playback requires an authorized video source'];
@@ -50,18 +48,13 @@
 
   function play(movie){
     const p=player(),v=document.getElementById('sk-legal-video'),err=document.getElementById('sk-legal-error');
-    const title=document.getElementById('sk-legal-title');
-    title.textContent='▶ '+movie[0];
+    document.getElementById('sk-legal-title').textContent='▶ '+movie[0];
+    err.style.display='none';
     p.classList.add('show');
-    let index=0;
-    const next=()=>{
-      if(index>=movie[1].length){err.textContent='This legal source is temporarily unavailable. Please try the title again later.';err.style.display='block';return}
-      err.style.display='none';
-      v.src=src(movie[1][index++]);v.load();
-      v.play().catch(()=>{});
-    };
-    v.onerror=next;
-    next();
+    v.onerror=()=>{err.textContent='Video source could not be loaded right now.';err.style.display='block'};
+    v.src=movie[1];
+    v.load();
+    v.play().catch(()=>{});
   }
 
   function init(){

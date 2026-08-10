@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="description" content="SK Movies Free Watch - openly licensed and public-domain films that play directly on the site.">
+<meta name="theme-color" content="#090909">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' https: data:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; media-src https:; base-uri 'self'; frame-ancestors 'none';">
+<title>SK Movies | Free Watch</title>
+<link rel="stylesheet" href="style.css">
+<style>
+.free-page{max-width:1150px;margin:auto;padding:28px 18px 70px}.free-intro{background:linear-gradient(135deg,#17090b,#0d0d0d);border:1px solid #2b2b2b;border-radius:20px;padding:24px;margin-bottom:24px}.free-intro h1{font-size:clamp(30px,6vw,52px);margin:8px 0}.free-intro p{color:#aaa;line-height:1.6}.free-badge{display:inline-block;background:#16a34a;color:#fff;padding:7px 12px;border-radius:999px;font-weight:800}.free-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}.free-card{background:#121212;border:1px solid #2b2b2b;border-radius:16px;overflow:hidden}.free-card img{width:100%;aspect-ratio:16/10;object-fit:cover;background:#222}.free-body{padding:14px}.free-body h3{margin:0 0 6px}.free-body p{color:#888;font-size:14px;min-height:38px}.free-watch{width:100%;border:0;background:#e50914;color:#fff;border-radius:9px;padding:11px;font-weight:800;cursor:pointer}.free-watch:hover{background:#ff1b26}.player-wrap{display:none;background:#080808;border:1px solid #333;border-radius:16px;padding:14px;margin-bottom:24px}.player-wrap.show{display:block}.player-wrap h2{margin:0 0 12px}.player-wrap video{width:100%;max-height:620px;background:#000;border-radius:10px}.credit{color:#777;font-size:13px;line-height:1.5;margin-top:8px}.credit a{color:#aaa}@media(max-width:850px){.free-grid{grid-template-columns:repeat(2,1fr)}}@media(max-width:520px){.free-grid{grid-template-columns:1fr}.free-page{padding:20px 12px 50px}}
+</style>
+</head>
+<body id="top">
+<header><a class="brand" href="index.html#top" aria-label="SK Movies Home"><img src="images/ChatGPT Image Aug 7, 2026, 09_35_17 PM.png" alt="SK Movies Logo"><span>SK Movies</span></a><nav aria-label="Main navigation"><a href="index.html#top">Home</a><a href="index.html#movies">Movies</a><a href="free-watch.html">Free Watch</a><a href="index.html#trending">Trending</a><a href="index.html#contact">Contact</a></nav></header>
+<main class="free-page">
+<a class="series-back" href="index.html#movies">← Back to Movies</a>
+<section class="free-intro"><span class="free-badge">✓ LEGAL • FREE • IN-SITE PLAYER</span><h1>Free Watch</h1><p>These titles are openly licensed or public-domain works. Choose a title and the video opens <strong>right here on SK Movies</strong> — no Crunchyroll redirect and no premium wall.</p></section>
+<section class="player-wrap" id="playerWrap"><h2 id="playerTitle">Now Playing</h2><video id="player" controls playsinline preload="metadata"></video><p class="credit" id="playerCredit"></p></section>
+<section class="free-grid" id="freeGrid"></section>
+</main>
+<script>
+const films=[
+ {title:'Big Buck Bunny',year:'2008',type:'Open movie • Animation / Comedy',poster:'https://upload.wikimedia.org/wikipedia/commons/7/7f/Big_Buck_Bunny_4K.webm.jpg',src:'https://archive.org/download/BigBuckBunny_124/big_buck_bunny_720p_surround.avi',credit:'Blender Foundation • Creative Commons Attribution 3.0',source:'https://archive.org/details/BigBuckBunny_124'},
+ {title:'Elephants Dream',year:'2006',type:'Open movie • Animation / Fantasy',poster:'https://upload.wikimedia.org/wikipedia/commons/e/e8/Elephants_Dream_s5_both.jpg',src:'https://archive.org/download/ElephantsDream/ed_1024_512kb.mp4',credit:'Orange Open Movie Project / Blender Foundation • CC BY 2.5',source:'https://archive.org/details/ElephantsDream'},
+ {title:'Sintel',year:'2010',type:'Open movie • Animation / Fantasy',poster:'https://upload.wikimedia.org/wikipedia/commons/5/59/Sintel_poster.jpg',src:'https://archive.org/download/Sintel/sintel-2048-surround.mp4',credit:'Blender Foundation • Creative Commons Attribution 3.0',source:'https://archive.org/details/Sintel'},
+ {title:'Tears of Steel',year:'2012',type:'Open movie • Sci-Fi / Action',poster:'https://upload.wikimedia.org/wikipedia/commons/6/6e/Tears_of_Steel_poster.jpg',src:'https://archive.org/download/Tears-of-Steel/tearsofsteel_4k.mov',credit:'Blender Foundation • Creative Commons Attribution 3.0',source:'https://archive.org/details/Tears-of-Steel'},
+ {title:'Sita Sings the Blues',year:'2008',type:'Open movie • Animation / Comedy',poster:'https://upload.wikimedia.org/wikipedia/commons/8/83/Sita_Sings_the_Blues_poster.jpg',src:'https://archive.org/download/Sita_Sings_the_Blues_Files/Sita_Sings_the_Blues_720p.mp4',credit:'Nina Paley • CC0 / public-domain release',source:'https://archive.org/details/Sita_Sings_the_Blues_Files'},
+ {title:'His Girl Friday',year:'1940',type:'Public domain • Comedy / Romance',poster:'https://upload.wikimedia.org/wikipedia/commons/4/4a/His_Girl_Friday_%281940%29.jpg',src:'https://archive.org/download/his_girl_friday/his_girl_friday.mpeg',credit:'Public-domain film • Internet Archive source',source:'https://archive.org/details/his_girl_friday'},
+ {title:'Night of the Living Dead',year:'1968',type:'Public domain • Horror / Zombie',poster:'https://upload.wikimedia.org/wikipedia/commons/4/4f/Night_of_the_Living_Dead_%281968%29.jpg',src:'https://archive.org/download/night_of_the_living_dead/night_of_the_living_dead.webm',credit:'Public-domain film • Internet Archive source',source:'https://archive.org/details/night_of_the_living_dead'},
+ {title:'The General',year:'1926',type:'Public domain • Comedy / Adventure',poster:'https://upload.wikimedia.org/wikipedia/commons/6/6a/The_General_%281926_film%29.jpg',src:'https://archive.org/download/TheGeneral_201303/the_general_1926.mp4',credit:'Public-domain film • Internet Archive source',source:'https://archive.org/details/TheGeneral_201303'}
+];
+const grid=document.getElementById('freeGrid');const player=document.getElementById('player');const wrap=document.getElementById('playerWrap');const title=document.getElementById('playerTitle');const credit=document.getElementById('playerCredit');
+films.forEach((f,i)=>{const c=document.createElement('article');c.className='free-card';c.innerHTML=`<img loading="lazy" src="${f.poster}" alt="${f.title} poster"><div class="free-body"><h3>${f.title}</h3><p>${f.year} • ${f.type}</p><button class="free-watch" type="button">▶ Watch Here</button></div>`;c.querySelector('button').onclick=()=>{title.textContent='▶ '+f.title;credit.innerHTML=f.credit+' • <a href="'+f.source+'" target="_blank" rel="noopener">Source / license</a>';player.src=f.src;wrap.classList.add('show');wrap.scrollIntoView({behavior:'smooth',block:'start'});player.play().catch(()=>{});};grid.appendChild(c);});
+</script>
+</body></html>
